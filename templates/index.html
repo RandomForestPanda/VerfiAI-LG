@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VerifAI - Verify Information Accuracy with AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --bg: #f9f9fb;
+            --card-bg: #ffffff;
+            --text: #2b2d42;
+            --border-radius: 12px;
+            --shadow: 0 8px 30px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.8rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .methods-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .method-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-color: rgba(0,0,0,0.08);
+        }
+
+        .method-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .method-header i {
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .method-card p {
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group textarea,
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: rgba(255,255,255,0.8);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group textarea:focus,
+        .form-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: var(--light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        footer {
+            margin-top: 4rem;
+            text-align: center;
+            padding: 2rem 0;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .animation-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 2rem;
+            border-radius: 50px;
+            background: #eee;
+            padding: 0.3rem;
+            max-width: 500px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.8rem;
+            cursor: pointer;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Features section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+        }
+
+        .feature i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .feature h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .feature p {
+            color: #666;
+        }
+
+        /* For small screens */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .methods-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>VerifAI</h1>
+            <p class="subtitle">Verify the credibility of information across multiple platforms with AI</p>
+
+            <div class="tab-container">
+                <div class="tab active" data-tab="direct">Direct Check</div>
+                <div class="tab" data-tab="reddit">Reddit</div>
+                <div class="tab" data-tab="whatsapp">WhatsApp</div>
+            </div>
+        </header>
+
+        <div class="tab-content active" id="direct-tab">
+            <div class="method-card animation-pulse">
+                <h2 class="method-header">
+                    <i class="fas fa-search"></i>
+                    Check Information
+                </h2>
+                <p>Enter any text, claim, or statement to analyze its credibility using our AI-powered fact-checking system.</p>
+
+                <form action="/check" method="post">
+                    <div class="form-group">
+                        <label for="text">Enter text to fact-check:</label>
+                        <textarea id="text" name="text" placeholder="Paste the text you want to verify..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-block">Analyze Credibility</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="tab-content" id="reddit-tab">
+            <div class="method-card">
+                <h2 class="method-header">
+                    <i class="fab fa-reddit-alien"></i>
+                    Reddit Post Verification
+                </h2>
+                <p>Enter a Reddit post URL to analyze the credibility of the post content.</p>
+
+                <form action="/reddit" method="post">
+                    <div class="form-group">
+                        <label for="post_url">Reddit Post URL:</label>
+                        <input type="url" id="post_url" name="post_url" placeholder="https://www.reddit.com/r/..." required>
+                    </div>
+                    <button type="submit" class="btn btn-block">Verify Post</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="tab-content" id="whatsapp-tab">
+            <div class="method-card">
+                <h2 class="method-header">
+                    <i class="fab fa-whatsapp"></i>
+                    WhatsApp Verification
+                </h2>
+                <p>Check the credibility of messages directly through WhatsApp or submit content here.</p>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+                    <a href="https://wa.me/14155238886" class="btn" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Open WhatsApp Chat
+                    </a>
+                    <p style="text-align: center; font-size: 0.9rem; color: #666;">Or submit your message below</p>
+                </div>
+
+<!--                <form action="/whatsapp/submit" method="post">-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="phone_number">Your WhatsApp Number:</label>-->
+<!--                        <input type="text" id="phone_number" name="phone_number" placeholder="+1234567890" required>-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="message">Message to Fact-Check:</label>-->
+<!--                        <textarea id="message" name="message" placeholder="Paste the message you want to verify..." required></textarea>-->
+<!--                    </div>-->
+<!--                    <button type="submit" class="btn btn-block">Submit for Analysis</button>-->
+<!--                </form>-->
+            </div>
+        </div>
+
+        <section class="features">
+            <div class="feature">
+                <i class="fas fa-robot"></i>
+                <h3>AI-Powered Analysis</h3>
+                <p>Our system uses advanced AI models to analyze content against trusted sources.</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Trusted Sources</h3>
+                <p>We cross-reference information with reputable and verified sources.</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-bolt"></i>
+                <h3>Fast Results</h3>
+                <p>Get credibility analysis within seconds to make informed decisions.</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2025 FactCheck. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+
+                    // Hide all tab contents
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+
+                    // Show the corresponding tab content
+                    const tabId = this.getAttribute('data-tab') + '-tab';
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
