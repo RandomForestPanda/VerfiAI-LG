@@ -58,7 +58,7 @@ TRUSTED_DOMAINS = [
 ]
 
 # Serper API Key
-SERPER_API_KEY = "af6aa350eafdbdcb4fd13c0971b775f445d93fb1"  # Replace with your actual key
+SERPER_API_KEY = os.getenv("SERPER_API_KEY")  # Replace with your actual key
 
 
 # Function to search using Serper API
