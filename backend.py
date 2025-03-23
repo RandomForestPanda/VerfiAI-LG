@@ -7,36 +7,36 @@ import json
 import requests
 import re
 from twilio.rest import Client
-import praw  # Add praw for Reddit integration
+import praw  
 from dotenv import load_dotenv
 load_dotenv(".env")
-# Initialize FastAPI app
+
 app = FastAPI()
 
 # Mount static files and templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-HF_API_KEY = os.getenv("HUGGINGFACE_API_KEY")  # Load from environment
+HF_API_KEY = os.getenv("HUGGINGFACE_API_KEY")  
 HF_API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
 
-# Twilio credentials
-TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")  # Load from environment
-TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")  # Load from environment
-TWILIO_WHATSAPP_NUMBER = os.getenv("TWILIO_WHATSAPP_NUMBER")  # Load from environment
 
-# Initialize Twilio client
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")  
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")  
+TWILIO_WHATSAPP_NUMBER = os.getenv("TWILIO_WHATSAPP_NUMBER")  
+
+
 twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-# Reddit credentials
-REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID")  # Load from environment
-REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET")  # Load from environment
-REDDIT_USER_AGENT = os.getenv("REDDIT_USER_AGENT")  # Load from environment
-REDDIT_USERNAME = os.getenv("REDDIT_USERNAME")  # Load from environment
-REDDIT_PASSWORD = os.getenv("REDDIT_PASSWORD")  # Load from environment
+
+REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID")  
+REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET")  
+REDDIT_USER_AGENT = os.getenv("REDDIT_USER_AGENT")  
+REDDIT_USERNAME = os.getenv("REDDIT_USERNAME")  
+REDDIT_PASSWORD = os.getenv("REDDIT_PASSWORD")  
 
 
-# Initialize Reddit client
+
 reddit = praw.Reddit(
     client_id=REDDIT_CLIENT_ID,
     client_secret=REDDIT_CLIENT_SECRET,
@@ -45,7 +45,7 @@ reddit = praw.Reddit(
     password=REDDIT_PASSWORD,
 )
 
-# Trusted domains list
+
 TRUSTED_DOMAINS = [
     'wikipedia.org', 'thehindu.com', 'timesofindia.indiatimes.com',
     'bbc.com', 'reuters.com', 'apnews.com', 'aljazeera.com',
@@ -57,11 +57,11 @@ TRUSTED_DOMAINS = [
     'medlineplus.gov', 'mayoclinic.org', 'clevelandclinic.org'
 ]
 
-# Serper API Key
-SERPER_API_KEY = os.getenv("SERPER_API_KEY")  # Replace with your actual key
+
+SERPER_API_KEY = os.getenv("SERPER_API_KEY")  
 
 
-# Function to search using Serper API
+
 def search_serper(query, num_results=10):
     """Perform a search using Serper."""
     print(f"Searching for: {query}")
@@ -77,7 +77,7 @@ def search_serper(query, num_results=10):
         return []
 
 
-# Function to extract content from URLs
+
 def extract_content(url):
     """Extract (raw) content from a URL, truncated to 2000 characters."""
     try:
@@ -90,7 +90,7 @@ def extract_content(url):
         return ""
 
 
-# Function to compose the prompt for the LLM
+
 def compose_prompt(claim, reference_texts):
     """Compose the prompt for the LLM based on the claim and reference texts."""
     prompt = f"""You are a fact-checking assistant. Analyze the following claim and determine if it's true, false, or unverifiable based on the provided sources.
@@ -128,7 +128,7 @@ def compose_prompt(claim, reference_texts):
     return prompt
 
 
-# Function to analyze text using Hugging Face Inference API
+
 async def analyze_text_with_mistral(prompt):
     try:
         headers = {
@@ -143,14 +143,14 @@ async def analyze_text_with_mistral(prompt):
             }
         }
 
-        # Send the request to Hugging Face API
+
         response = requests.post(HF_API_URL, headers=headers, json=payload)
         response.raise_for_status()
 
-        # Extract the generated text
+
         generated_text = response.json()[0]["generated_text"]
 
-        # Debugging: Print the raw response
+        # Debugging: Print the raw response, backend logging 
         print("Raw Response from Hugging Face API:")
         print(generated_text)
 
@@ -274,7 +274,7 @@ async def check_text(request: Request, text: str = Form(...)):
         "text": text,
         "result": {
             "label": result["assessment"],
-            "confidence": result["reliability_score"] / 100,  # Convert to a 0-1 range for the template
+            "confidence": result["reliability_score"] / 100,  
             "reasoning": result["reasoning"],
             "sources": result["sources"]
         }
@@ -285,7 +285,7 @@ async def check_text(request: Request, text: str = Form(...)):
 @app.post("/reddit", response_class=HTMLResponse)
 async def reddit_verify(request: Request, post_url: str = Form(...)):
     try:
-        print(f"Received Reddit URL: {post_url}")  # Debugging
+        print(f"Received Reddit URL: {post_url}")  # Debugging comm
         post_id = post_url.split("/comments/")[1].split("/")[0]
         print(f"Extracted Post ID: {post_id}")  # Debugging
         submission = reddit.submission(id=post_id)
